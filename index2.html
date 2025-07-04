@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Frame - Creative Advertising Agency</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <!-- Lottie -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
+    <!-- Splide.js for sliders -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Styles -->
+    <style>
+        :root {
+            --primary: #ff4d4d;
+            --secondary: #2b2b2b;
+            --accent: #f9c74f;
+            --dark: #1a1a1a;
+            --light: #f8f9fa;
+            --brown-bg: #2a2118;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--brown-bg);
+            color: var(--light);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        /* 3D Background Canvas */
+        #canvas3d {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        /* Glassmorphism Effect */
+        .glass {
+            background: rgba(43, 43, 43, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Neumorphism Effect */
+        .neumorph {
+            border-radius: 20px;
+            background: var(--dark);
+            box-shadow:  10px 10px 20px #0d0d0d,
+                         -10px -10px 20px #272727;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        /* Hero Section */
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            line-height: 1;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* Animated Underline */
+        .underline-animate {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .underline-animate::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .underline-animate:hover::after {
+            width: 100%;
+        }
+        
+        /* Service Card Hover Effect */
+        .service-card {
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform-style: preserve-3d;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
+        
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            cursor: pointer;
+            aspect-ratio: 1/1;
+        }
+        
+        .gallery-item img {
+            transition: transform 0.5s ease;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        /* Video Player */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Animated Button */
+        .btn-animate {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn-animate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+            z-index: -1;
+        }
+        
+        .btn-animate:hover::before {
+            left: 100%;
+        }
+        
+        /* 3D Card */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+        
+        .card-3d:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+        
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 50px;
+            border: 2px solid var(--light);
+            border-radius: 15px;
+        }
+        
+        .scroll-indicator::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            background: var(--light);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            animation: scrollAnimation 2s infinite;
+        }
+        
+        @keyframes scrollAnimation {
+            0% {
+                opacity: 1;
+                top: 10px;
+            }
+            100% {
+                opacity: 0;
+                top: 30px;
+            }
+        }
+        
+        /* Festival Slider */
+        .festival-slide {
+            position: relative;
+            height: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        
+        .festival-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .festival-slide:hover img {
+            transform: scale(1.05);
+        }
+        
+        .festival-slide-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            color: white;
+        }
+        
+        /* Video Library */
+        .video-library-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .video-library-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        
+        .video-library-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .video-library-item:hover::before {
+            background: rgba(0,0,0,0.1);
+        }
+        
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .video-library-item:hover .play-icon {
+            background: var(--primary);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        /* Image Magnifier */
+        .magnifier-container {
+            position: relative;
+            overflow: hidden;
+            cursor: none;
+        }
+        
+        .magnifier-img {
+            transition: transform 0.2s ease;
+        }
+        
+        .magnifier-lens {
+            position: absolute;
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            pointer-events: none;
+            background-repeat: no-repeat;
+            display: none;
+            z-index: 100;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .festival-slide {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- 3D Background -->
+    <canvas id="canvas3d"></canvas>
+    
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass py-4 px-6 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-white">
+                <span class="text-red-500">FINAL</span> FRAME
+            </a>
+            
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="text-white hover:text-red-500 transition underline-animate">Home</a>
+                <a href="#about" class="text-white hover:text-red-500 transition underline-animate">About</a>
+                <a href="#services" class="text-white hover:text-red-500 transition underline-animate">Services</a>
+                <a href="#portfolio" class="text-white hover:text-red-500 transition underline-animate">Portfolio</a>
+                <a href="#festivals" class="text-white hover:text-red-500 transition underline-animate">Festivals</a>
+                <a href="#video-library" class="text-white hover:text-red-500 transition underline-animate">Videos</a>
+                <a href="#blog" class="text-white hover:text-red-500 transition underline-animate">Blog</a>
+                <a href="#contact" class="text-white hover:text-red-500 transition underline-animate">Contact</a>
+            </div>
+            
+            <button class="md:hidden text-white focus:outline-none" id="mobile-menu-button">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden absolute top-16 left-0 w-full bg-gray-900 py-4 px-6" id="mobile-menu">
+            <div class="flex flex-col space-y-4">
+                <a href="#home" class="text-white hover:text-red-500 transition">Home</a>
+                <a href="#about" class="text-white hover:text-red-500 transition">About</a>
+                <a href="#services" class="text-white hover:text-red-500 transition">Services</a>
+                <a href="#portfolio" class="text-white hover:text-red-500 transition">Portfolio</a>
+                <a href="#festivals" class="text-white hover:text-red-500 transition">Festivals</a>
+                <a href="#video-library" class="text-white hover:text-red-500 transition">Videos</a>
+                <a href="#blog" class="text-white hover:text-red-500 transition">Blog</a>
+                <a href="#contact" class="text-white hover:text-red-500 transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div class="container mx-auto px-6 py-24 md:py-32 text-center">
+            <h1 class="hero-title font-bold mb-6">
+                CREATE STORIES<br>THAT MATTER
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto">
+                We're a unique and highly cost-effective Advertising Agency combining personal appeal with expert experience to deliver exceptional results.
+            </p>
+            <div class="flex flex-col md:flex-row justify-center gap-4">
+                <a href="#contact" class="btn-animate bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-full transition duration-300 transform hover:scale-105">
+                    Get Started
+                </a>
+                <a href="#portfolio" class="btn-animate border-2 border-white hover:border-red-500 text-white hover:text-red-500 font-bold py-3 px-8 rounded-full transition duration-300 transform hover:scale-105">
+                    View Work
+                </a>
+            </div>
+        </div>
+        
+        <div class="scroll-indicator"></div>
+        
+        <!-- Animated Lottie Element -->
+        <div id="lottie-animation" class="absolute bottom-10 right-10 w-32 h-32 opacity-70 hidden md:block"></div>
+        
+        <!-- Floating particles animation -->
+        <div id="floating-particles" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="py-20 relative overflow-hidden">
+        <!-- ... (previous about section content) ... -->
+    </section>
+    
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-gray-900 bg-opacity-50 relative">
+        <!-- ... (previous services section content) ... -->
+    </section>
+    
+    <!-- Festival Slider Section -->
+    <section id="festivals" class="py-20 relative overflow-hidden">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-white">Festival Campaigns</h2>
+                <div class="w-20 h-1 bg-red-500 mx-auto"></div>
+                <p class="text-gray-300 max-w-2xl mx-auto mt-4">
+                    Our creative festival campaigns that capture the essence of celebrations
+                </p>
+            </div>
+            
+            <div class="splide festival-slider">
+                <div class="splide__track">
+                    <ul class="splide__list">
+                        <!-- Festival Slide 1 -->
+                        <li class="splide__slide">
+                            <div class="festival-slide">
+                                <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Diwali Campaign">
+                                <div class="festival-slide-content">
+                                    <h3 class="text-2xl font-bold mb-2">Diwali Lights</h3>
+                                    <p class="text-gray-300 mb-3">Festive campaign for a leading jewelry brand</p>
+                                    <span class="inline-block bg-red-500 text-white px-3 py-1 rounded-full text-sm">View Case Study</span>
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <!-- Festival Slide 2 -->
+                        <li class="splide__slide">
+                            <div class="festival-slide">
+                                <img src="https://images.unsplash.com/photo-1518633945839-0d4339a1eb4f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Christmas Campaign">
+                                <div class="festival-slide-content">
+                                    <h3 class="text-2xl font-bold mb-2">Christmas Magic</h3>
+                                    <p class="text-gray-300 mb-3">Holiday campaign for retail chain</p>
+                                    <span class="inline-block bg-red-500 text-white px-3 py-1 rounded-full text-sm">View Case Study</span>
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <!-- Festival Slide 3 -->
+                        <li class="splide__slide">
+                            <div class="festival-slide">
+                                <img src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Eid Campaign">
+                                <div class="festival-slide-content">
+                                    <h3 class="text-2xl font-bold mb-2">Eid Mubarak</h3>
+                                    <p class="text-gray-300 mb-3">Festive collection for fashion brand</p>
+                                    <span class="inline-block bg-red-500 text-white px-3 py-1 rounded-full text-sm">View Case Study</span>
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <!-- Festival Slide 4 -->
+                        <li class="splide__slide">
+                            <div class="festival-slide">
+                                <img src="https://images.unsplash.com/photo-1562565652-a2d087063f52?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="New Year Campaign">
+                                <div class="festival-slide-content">
+                                    <h3 class="text-2xl font-bold mb-2">New Year Countdown</h3>
+                                    <p class="text-gray-300 mb-3">Celebration campaign for beverage company</p>
+                                    <span class="inline-block bg-red-500 text-white px-3 py-1 rounded-full text-sm">View Case Study</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-20 relative">
+        <!-- ... (previous portfolio section content) ... -->
+    </section>
+    
+    <!-- Video Library Section -->
+    <section id="video-library" class="py-20 bg-black bg-opacity-50 relative overflow-hidden">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-white">Video Library</h2>
+                <div class="w-20 h-1 bg-red-500 mx-auto"></div>
+                <p class="text-gray-300 max-w-2xl mx-auto mt-4">
+                    Explore our collection of award-winning video productions
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Video 1 -->
+                <div class="video-library-item">
+                    <img src="https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Commercial Ad" class="w-full h-64 object-cover">
+                    <div class="play-icon">
+                        <i class="fas fa-play text-white text-xl"></i>
+                    </div>
+                    <div class="p-4 bg-gray-800">
+                        <h3 class="text-xl font-bold text-white mb-2">Luxury Automobile</h3>
+                        <p class="text-gray-300">60-second TV commercial</p>
+                    </div>
+                </div>
+                
+                <!-- Video 2 -->
+                <div class="video-library-item">
+                    <img src="https://images.unsplash.com/photo-1579105943079-ee1c8c2b4d22?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Explainer Video" class="w-full h-64 object-cover">
+                    <div class="play-icon">
+                        <i class="fas fa-play text-white text-xl"></i>
+                    </div>
+                    <div class="p-4 bg-gray-800">
+                        <h3 class="text-xl font-bold text-white mb-2">Tech Explainer</h3>
+                        <p class="text-gray-300">Animated explainer video</p>
+                    </div>
+                </div>
+                
+                <!-- Video 3 -->
+                <div class="video-library-item">
+                    <img src="https://images.unsplash.com/photo-1542190891-2093d38760f2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Documentary" class="w-full h-64 object-cover">
+                    <div class="play-icon">
+                        <i class="fas fa-play text-white text-xl"></i>
+                    </div>
+                    <div class="p-4 bg-gray-800">
+                        <h3 class="text-xl font-bold text-white mb-2">Brand Documentary</h3>
+                        <p class="text-gray-300">Corporate brand story</p>
+                    </div>
+                </div>
+                
+                <!-- Video 4 -->
+                <div class="video-library-item">
+                    <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Music Video" class="w-full h-64 object-cover">
+                    <div class="play-icon">
+                        <i class="fas fa-play text-white text-xl"></i>
+                    </div>
+                    <div class="p-4 bg-gray-800">
+                        <h3 class="text-xl font-bold text-white mb-2">Music Video</h3>
+                        <p class="text-gray-300">Artist promotional video</p>
+                    </div>
+                </div>
+                
+                <!-- Video 5 -->
+                <div class="video-library-item">
+                    <!-- <img src="https://images.unsplash.com/photo-1551806235-e09f6a9041eb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Product Video" class="w-full h-64 object-cover"> -->
+                    <video src="https://youtu.be/2WrK4d6ngcU?si=AfBDKwvy8maYnQgi"></video>
+                    
+                    <div class="play-icon">
+                        <i class="fas fa-play text-white text-xl"></i>
+                    </div>
+                    <div class="p-4 bg-gray-800">
+                        <h3 class="text-xl font-bold text-white mb-2">Product Demo</h3>
+                        <p class="text-gray-300">3D product visualization</p>
+                    </div>
+                </div>
+                
+                <!-- Video 6 -->
+                <div class="video-library-item">
+                    <img src="https://images.unsplash.com/photo-1542623024-a797a755b8d0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Event Video" class="w-full h-64 object-cover">
+                    <div class="play-icon">
+                        <i class="fas fa-play text-white text-xl"></i>
+                    </div>
+                    <div class="p-4 bg-gray-800">
+                        <h3 class="text-xl font-bold text-white mb-2">Event Coverage</h3>
+                        <p class="text-gray-300">Corporate annual event</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="video-library.html" class="btn-animate bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-full transition duration-300 inline-block">
+                    View All Videos
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Image Magnifier Section -->
+    <section class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-white">Featured Work</h2>
+                <div class="w-20 h-1 bg-red-500 mx-auto"></div>
+                <p class="text-gray-300 max-w-2xl mx-auto mt-4">
+                    Hover over the image to see the magnifier effect
+                </p>
+            </div>
+            
+            <div class="flex justify-center">
+                <div class="magnifier-container w-full max-w-4xl">
+                    <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Featured Work" class="magnifier-img w-full h-auto rounded-xl">
+                    <div class="magnifier-lens"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials Section -->
+    <section class="py-20 relative">
+        <!-- ... (previous testimonials section content) ... -->
+    </section>
+    
+    <!-- Blog Section -->
+    <section id="blog" class="py-20 bg-gray-900 bg-opacity-50 relative">
+        <!-- ... (previous blog section content) ... -->
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 relative">
+        <!-- ... (previous contact section content) ... -->
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-black bg-opacity-70 py-12">
+        <!-- ... (previous footer content) ... -->
+    </footer>
+    
+    <!-- AI Chatbot -->
+    <div id="chatbot-trigger" class="fixed bottom-8 right-8 w-16 h-16 bg-red-500 rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:bg-red-600 transition duration-300 z-50">
+        <i class="fas fa-robot text-white text-2xl"></i>
+    </div>
+    
+    <div id="chatbot-container" class="fixed bottom-24 right-8 w-80 h-96 bg-gray-800 rounded-xl shadow-xl hidden flex flex-col z-50 border border-gray-700">
+        <!-- ... (previous chatbot content) ... -->
+    </div>
+    
+    <!-- Video Modal -->
+    <div id="video-modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden">
+        <div class="relative w-full max-w-4xl mx-4">
+            <button id="close-video" class="absolute -top-12 right-0 text-white text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="aspect-w-16 aspect-h-9">
+                <iframe id="modal-video-iframe" width="100%" height="100%" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+        
+        // Portfolio Filter
+        const filterButtons = document.querySelectorAll('.portfolio-filter');
+        const portfolioItems = document.querySelectorAll('.portfolio-item');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('bg-red-500', 'hover:bg-red-500'));
+                filterButtons.forEach(btn => btn.classList.add('bg-gray-700', 'hover:bg-red-500'));
+                
+                // Add active class to clicked button
+                this.classList.remove('bg-gray-700', 'hover:bg-red-500');
+                this.classList.add('bg-red-500');
+                
+                const filterValue = this.getAttribute('data-filter');
+                
+                portfolioItems.forEach(item => {
+                    if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Load More Button
+        document.getElementById('load-more').addEventListener('click', function() {
+            // In a real implementation, this would load more items via AJAX
+            alert('Loading more portfolio items...');
+        });
+        
+        // Contact Form Submission
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        });
+        
+        // Chatbot Toggle
+        const chatbotTrigger = document.getElementById('chatbot-trigger');
+        const chatbotContainer = document.getElementById('chatbot-container');
+        const chatbotClose = document.getElementById('chatbot-close');
+        
+        chatbotTrigger.addEventListener('click', function() {
+            chatbotContainer.classList.toggle('hidden');
+        });
+        
+        chatbotClose.addEventListener('click', function() {
+            chatbotContainer.classList.add('hidden');
+        });
+        
+        // Chatbot Functionality
+        const chatbotMessages = document.getElementById('chatbot-messages');
+        const chatbotInput = document.getElementById('chatbot-input');
+        const chatbotSend = document.getElementById('chatbot-send');
+        
+        function addBotMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex items-start';
+            messageDiv.innerHTML = `
+                <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center mr-2">
+                    <i class="fas fa-robot text-white text-sm"></i>
+                </div>
+                <div class="bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+                    <p class="text-white text-sm">${text}</p>
+                </div>
+            `;
+            chatbotMessages.appendChild(messageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+        
+        function addUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex items-start justify-end';
+            messageDiv.innerHTML = `
+                <div class="bg-red-500 px-3 py-2 rounded-lg max-w-xs">
+                    <p class="text-white text-sm">${text}</p>
+                </div>
+                <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center ml-2">
+                    <i class="fas fa-user text-white text-sm"></i>
+                </div>
+            `;
+            chatbotMessages.appendChild(messageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+        
+        chatbotSend.addEventListener('click', function() {
+            const message = chatbotInput.value.trim();
+            if (message) {
+                addUserMessage(message);
+                chatbotInput.value = '';
+                
+                // Simulate bot response
+                setTimeout(() => {
+                    const responses = [
+                        "I'd be happy to help with that! Our team specializes in creative advertising solutions.",
+                        "For more information about our services, please visit our website or contact us directly.",
+                        "That's a great question! Let me connect you with one of our specialists.",
+                        "We offer a wide range of advertising services. What specifically are you interested in?",
+                        "Thank you for your inquiry! Someone from our team will respond shortly."
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addBotMessage(randomResponse);
+                }, 1000);
+            }
+        });
+        
+        chatbotInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                chatbotSend.click();
+            }
+        });
+        
+        // Initialize Lottie Animation
+        lottie.loadAnimation({
+            container: document.getElementById('lottie-animation'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'https://assets5.lottiefiles.com/packages/lf20_gn0tojcq.json' // Creative animation
+        });
+        
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Animate sections on scroll
+        gsap.utils.toArray('section').forEach(section => {
+            gsap.from(section, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 80%',
+                    toggleActions: 'play none none none'
+                },
+                opacity: 0,
+                y: 50,
+                duration: 1
+            });
+        });
+        
+        // Animate service cards
+        gsap.utils.toArray('.service-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 80%',
+                    toggleActions: 'play none none none'
+                },
+                opacity: 0,
+                y: 50,
+                duration: 0.5,
+                delay: i * 0.1
+            });
+        });
+        
+        // 3D Background with Three.js
+        const canvas = document.getElementById('canvas3d');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            alpha: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        // Create particles
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particleCount = 1000;
+        
+        const posArray = new Float32Array(particleCount * 3);
+        
+        for(let i = 0; i < particleCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 10;
+        }
+        
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.02,
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.8
+        });
+        
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+        
+        camera.position.z = 3;
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            particlesMesh.rotation.x += 0.0005;
+            particlesMesh.rotation.y += 0.0005;
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Initialize Festival Slider
+        new Splide('.festival-slider', {
+            type: 'loop',
+            perPage: 1,
+            perMove: 1,
+            gap: '2rem',
+            autoplay: true,
+            interval: 5000,
+            pauseOnHover: true,
+            breakpoints: {
+                768: {
+                    gap: '1rem',
+                }
+            }
+        }).mount();
+        
+        // Video Library Modal
+        const videoModal = document.getElementById('video-modal');
+        const closeVideo = document.getElementById('close-video');
+        const modalVideoIframe = document.getElementById('modal-video-iframe');
+        const videoItems = document.querySelectorAll('.video-library-item');
+        
+        videoItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // In a real implementation, this would load the actual video URL
+                modalVideoIframe.src = 'https://www.youtube.com/embed/9No-FiEInLA?autoplay=1';
+                videoModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        closeVideo.addEventListener('click', function() {
+            modalVideoIframe.src = '';
+            videoModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Image Magnifier
+        const magnifierContainer = document.querySelector('.magnifier-container');
+        const magnifierImg = document.querySelector('.magnifier-img');
+        const magnifierLens = document.querySelector('.magnifier-lens');
+        
+        if (magnifierContainer && magnifierImg && magnifierLens) {
+            magnifierContainer.addEventListener('mousemove', function(e) {
+                const { left, top, width, height } = this.getBoundingClientRect();
+                const x = e.pageX - left - window.pageXOffset;
+                const y = e.pageY - top - window.pageYOffset;
+                
+                // Calculate percentage position
+                const xPercent = (x / width) * 100;
+                const yPercent = (y / height) * 100;
+                
+                // Update lens position
+                magnifierLens.style.left = `${x - 75}px`;
+                magnifierLens.style.top = `${y - 75}px`;
+                magnifierLens.style.display = 'block';
+                
+                // Update lens background
+                magnifierLens.style.backgroundImage = `url('${magnifierImg.src}')`;
+                magnifierLens.style.backgroundSize = `${width * 2}px ${height * 2}px`;
+                magnifierLens.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
+            });
+            
+            magnifierContainer.addEventListener('mouseleave', function() {
+                magnifierLens.style.display = 'none';
+            });
+        }
+        
+        // Floating particles animation
+        const floatingParticles = document.getElementById('floating-particles');
+        if (floatingParticles) {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'absolute rounded-full bg-white opacity-10';
+                particle.style.width = `${Math.random() * 10 + 5}px`;
+                particle.style.height = particle.style.width;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animation = `float ${Math.random() * 10 + 10}s linear infinite`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                floatingParticles.appendChild(particle);
+            }
+            
+            // Add CSS for floating animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes float {
+                    0% {
+                        transform: translateY(0) translateX(0);
+                        opacity: 0.1;
+                    }
+                    50% {
+                        opacity: 0.2;
+                    }
+                    100% {
+                        transform: translateY(-100vh) translateX(20px);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    </script>
+</body>
+</html>

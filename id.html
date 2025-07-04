@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Frame - Ultimate Multimedia Experience</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <!-- Splide.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <style>
+        :root {
+            --primary: #ff4d4d;
+            --secondary: #4d79ff;
+            --accent: #ffcc00;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --light: #f5f5f5;
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --neon-green: #00ff00;
+            --neon-purple: #9400d3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, var(--darker) 100%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Particle Background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        /* Header Styles */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 2.2rem;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--light);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 77, 77, 0.1), rgba(77, 121, 255, 0.1));
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 600px;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            margin-left: 15px;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .hero-image {
+            position: absolute;
+            right: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 500px;
+            height: 500px;
+            background: url('https://via.placeholder.com/500') no-repeat center center;
+            background-size: cover;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(-50%) translateX(0); }
+            50% { transform: translateY(-50%) translateX(20px); }
+        }
+
+        /* Animated Image Slider */
+        .image-slider-section {
+            padding: 100px 5%;
+            background: var(--darker);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: white;
+            display: inline-block;
+            position: relative;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .festival-slider {
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        .splide__slide {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .splide__slide:hover {
+            transform: scale(1.05);
+        }
+
+        .splide__slide img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .splide__slide:hover img {
+            transform: scale(1.1);
+        }
+
+        .slide-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+            color: white;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .splide__slide:hover .slide-content {
+            transform: translateY(0);
+        }
+
+        .slide-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .slide-content p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+
+        /* Video Library Section */
+        .video-library-section {
+            padding: 100px 5%;
+            background: url('https://via.placeholder.com/1920x1080') no-repeat center center;
+            background-size: cover;
+            position: relative;
+        }
+
+        .video-library-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 0;
+        }
+
+        .video-library-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .video-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            background: var(--darker);
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .video-card:hover .video-thumbnail img {
+            transform: scale(1.1);
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .play-icon i {
+            color: white;
+            font-size: 1.5rem;
+            margin-left: 5px;
+        }
+
+        .video-card:hover .play-icon {
+            background: var(--primary);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .video-info {
+            padding: 20px;
+        }
+
+        .video-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .video-info p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 15px;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+        }
+
+        /* Theater Experience Section */
+        .theater-section {
+            padding: 100px 5%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theater-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://via.placeholder.com/1920x1080') no-repeat center center;
+            background-size: cover;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        .theater-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .theater-screen {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 10px;
+            margin: 50px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .theater-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                transparent 48%, 
+                var(--neon-blue) 49%, 
+                var(--neon-blue) 51%, 
+                transparent 52%);
+            background-size: 10px 10px;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .theater-seats {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .seat {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .seat:hover {
+            background: var(--neon-blue);
+            color: white;
+        }
+
+        .seat.selected {
+            background: var(--primary);
+            color: white;
+        }
+
+        .seat.vip {
+            background: rgba(255, 204, 0, 0.2);
+            color: var(--accent);
+        }
+
+        .theater-controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+            gap: 20px;
+        }
+
+        /* 3D Experience Section */
+        .experience-3d {
+            padding: 100px 5%;
+            background: var(--darker);
+            position: relative;
+        }
+
+        .experience-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .vr-headset {
+            width: 400px;
+            height: 300px;
+            margin: 0 auto;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .vr-screen {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            transform-style: preserve-3d;
+            transform: rotateY(20deg);
+            transition: transform 0.5s ease;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .vr-headset:hover .vr-screen {
+            transform: rotateY(0deg);
+        }
+
+        .vr-strap {
+            position: absolute;
+            width: 100px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            top: 50%;
+            border-radius: 5px;
+        }
+
+        .vr-strap.left {
+            left: -80px;
+            transform: rotateZ(-10deg);
+        }
+
+        .vr-strap.right {
+            right: -80px;
+            transform: rotateZ(10deg);
+        }
+
+        /* Space Experience Section */
+        .space-section {
+            padding: 150px 5%;
+            background: url('https://via.placeholder.com/1920x1080') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .space-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 0;
+        }
+
+        .space-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .planet {
+            width: 300px;
+            height: 300px;
+            background: url('https://via.placeholder.com/300') no-repeat center center;
+            background-size: cover;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            right: 10%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 100px var(--neon-purple);
+            animation: rotate 60s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .spaceship {
+            width: 150px;
+            height: 80px;
+            background: url('https://via.placeholder.com/150x80') no-repeat center center;
+            background-size: contain;
+            position: absolute;
+            top: 30%;
+            left: 20%;
+            animation: fly 15s linear infinite;
+        }
+
+        @keyframes fly {
+            0% { transform: translateX(-100px) translateY(0); }
+            50% { transform: translateX(100px) translateY(-50px); }
+            100% { transform: translateX(300px) translateY(0); }
+        }
+
+        /* Underwater Experience Section */
+        .underwater-section {
+            padding: 100px 5%;
+            background: linear-gradient(to bottom, #000428, #004e92);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: float-up linear infinite;
+        }
+
+        @keyframes float-up {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
+        }
+
+        .fish {
+            position: absolute;
+            width: 50px;
+            height: 30px;
+            background: url('https://via.placeholder.com/50x30') no-repeat center center;
+            background-size: contain;
+            animation: swim linear infinite;
+        }
+
+        @keyframes swim {
+            0% { transform: translateX(-100px) translateY(0); }
+            100% { transform: translateX(calc(100vw + 100px)) translateY(50px); }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            padding: 50px 5% 20px;
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-column h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .footer-column p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            width: 80%;
+            max-width: 1000px;
+            background: var(--darker);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-video {
+            width: 100%;
+            height: 500px;
+            background: black;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .close-modal:hover {
+            background: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .hero-image {
+                width: 400px;
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero {
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+                padding-top: 100px;
+            }
+            
+            .hero-content {
+                margin-bottom: 50px;
+            }
+            
+            .hero-image {
+                position: relative;
+                right: auto;
+                top: auto;
+                transform: none;
+                margin: 0 auto;
+            }
+            
+            .btn-group {
+                display: flex;
+                justify-content: center;
+            }
+            
+            nav ul {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: var(--darker);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.5s ease;
+            }
+            
+            nav ul.active {
+                left: 0;
+            }
+            
+            nav ul li {
+                margin: 15px 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .planet {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+            }
+            
+            .vr-headset {
+                width: 300px;
+                height: 250px;
+            }
+            
+            .modal-video {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-image {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-outline {
+                margin-left: 0;
+                margin-top: 15px;
+            }
+            
+            .splide__slide img {
+                height: 300px;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .fade-in.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Lightning Effect */
+        .lightning {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: white;
+            opacity: 0;
+            z-index: -1;
+        }
+
+        /* Glitch Effect */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+
+        .glitch::before {
+            color: var(--neon-blue);
+            z-index: -1;
+            animation: glitch-effect 3s infinite;
+        }
+
+        .glitch::after {
+            color: var(--neon-pink);
+            z-index: -2;
+            animation: glitch-effect 2s infinite reverse;
+        }
+
+        @keyframes glitch-effect {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, 3px); }
+            80% { transform: translate(3px, -3px); }
+            100% { transform: translate(0); }
+        }
+
+        /* Hover Effects */
+        .hover-grow {
+            transition: transform 0.3s ease;
+        }
+
+        .hover-grow:hover {
+            transform: scale(1.05);
+        }
+
+        .hover-color:hover {
+            color: var(--primary) !important;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+
+    <!-- Header -->
+    <header>
+        <a href="#" class="logo"><i class="fas fa-film"></i>Final <span>Frame</span></a>
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">Video Library</a></li>
+                <li><a href="#">Image Gallery</a></li>
+                <li><a href="#">3D Experience</a></li>
+                <li><a href="#">IMAX</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="glitch" data-text="Ultimate Multimedia Experience">Ultimate Multimedia Experience</h1>
+            <p>Discover the future of entertainment with our cutting-edge video and image galleries, 3D experiences, and immersive theaters.</p>
+            <div class="btn-group">
+                <a href="#" class="btn">Explore Now</a>
+                <a href="#" class="btn btn-outline">Learn More</a>
+            </div>
+        </div>
+        <div class="hero-image hover-grow">
+            <div class="lightning"></div>
+        </div>
+    </section>
+
+    <!-- Animated Image Slider -->
+    <section class="image-slider-section">
+        <div class="section-title fade-in">
+            <h2>Festival Highlights</h2>
+        </div>
+        <div class="festival-slider splide fade-in">
+            <div class="splide__track">
+                <ul class="splide__list">
+                    <li class="splide__slide">
+                        <img src="https://via.placeholder.com/800x400?text=Festival+1" alt="Festival Image">
+                        <div class="slide-content">
+                            <h3>Cannes Film Festival</h3>
+                            <p>Experience the glamour of the world's most prestigious film festival.</p>
+                            <a href="#" class="btn">View Gallery</a>
+                        </div>
+                    </li>
+                    <li class="splide__slide">
+                        <img src="https://via.placeholder.com/800x400?text=Festival+2" alt="Festival Image">
+                        <div class="slide-content">
+                            <h3>Sundance Film Festival</h3>
+                            <p>Discover independent cinema at its finest in the mountains of Utah.</p>
+                            <a href="#" class="btn">View Gallery</a>
+                        </div>
+                    </li>
+                    <li class="splide__slide">
+                        <img src="https://via.placeholder.com/800x400?text=Festival+3" alt="Festival Image">
+                        <div class="slide-content">
+                            <h3>Venice Film Festival</h3>
+                            <p>The oldest film festival in the world, set in the beautiful city of Venice.</p>
+                            <a href="#" class="btn">View Gallery</a>
+                        </div>
+                    </li>
+                    <li class="splide__slide">
+                        <img src="https://via.placeholder.com/800x400?text=Festival+4" alt="Festival Image">
+                        <div class="slide-content">
+                            <h3>Toronto International</h3>
+                            <p>A diverse selection of films from around the globe.</p>
+                            <a href="#" class="btn">View Gallery</a>
+                        </div>
+                    </li>
+                    <li class="splide__slide">
+                        <img src="https://via.placeholder.com/800x400?text=Festival+5" alt="Festival Image">
+                        <div class="slide-content">
+                            <h3>Berlin Film Festival</h3>
+                            <p>Celebrating cinematic art in the heart of Europe.</p>
+                            <a href="#" class="btn">View Gallery</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Library Section -->
+    <section class="video-library-section">
+        <div class="video-library-container">
+            <div class="section-title fade-in">
+                <h2>Video Library</h2>
+            </div>
+            <div class="video-grid">
+                <div class="video-card fade-in">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225?text=Video+1" alt="Video Thumbnail">
+                        <div class="play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Epic Mountain Adventure</h3>
+                        <p>Join us on an unforgettable journey through the world's most breathtaking mountain ranges.</p>
+                        <div class="video-meta">
+                            <span><i class="far fa-clock"></i> 12:34</span>
+                            <span><i class="far fa-eye"></i> 1.2M views</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card fade-in">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225?text=Video+2" alt="Video Thumbnail">
+                        <div class="play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Ocean Wonders</h3>
+                        <p>Dive deep into the mysterious world beneath the waves in stunning 4K resolution.</p>
+                        <div class="video-meta">
+                            <span><i class="far fa-clock"></i> 8:45</span>
+                            <span><i class="far fa-eye"></i> 890K views</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card fade-in">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225?text=Video+3" alt="Video Thumbnail">
+                        <div class="play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3>City Lights at Night</h3>
+                        <p>Time-lapse footage of the world's most vibrant cities after dark.</p>
+                        <div class="video-meta">
+                            <span><i class="far fa-clock"></i> 5:12</span>
+                            <span><i class="far fa-eye"></i> 2.3M views</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card fade-in">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225?text=Video+4" alt="Video Thumbnail">
+                        <div class="play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Wildlife Safari</h3>
+                        <p>Get up close with nature's most magnificent creatures in their natural habitats.</p>
+                        <div class="video-meta">
+                            <span><i class="far fa-clock"></i> 15:20</span>
+                            <span><i class="far fa-eye"></i> 1.7M views</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card fade-in">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225?text=Video+5" alt="Video Thumbnail">
+                        <div class="play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Desert Mysteries</h3>
+                        <p>Explore the vast, beautiful and sometimes dangerous desert landscapes.</p>
+                        <div class="video-meta">
+                            <span><i class="far fa-clock"></i> 9:33</span>
+                            <span><i class="far fa-eye"></i> 1.1M views</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card fade-in">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/400x225?text=Video+6" alt="Video Thumbnail">
+                        <div class="play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Northern Lights</h3>
+                        <p>Witness the spectacular aurora borealis in this breathtaking footage.</p>
+                        <div class="video-meta">
+                            <span><i class="far fa-clock"></i> 7:18</span>
+                            <span><i class="far fa-eye"></i> 3.4M views</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Theater Experience Section -->
+    <section class="theater-section">
+        <div class="theater-bg"></div>
+        <div class="theater-container">
+            <div class="section-title fade-in">
+                <h2>Theater Experience</h2>
+            </div>
+            <div class="theater-screen fade-in">
+                <p>IMAX Enhanced Theater Experience</p>
+            </div>
+            <div class="theater-seats fade-in">
+                <!-- Screen -->
+                <div style="width: 100%; text-align: center; margin-bottom: 30px; color: white;">SCREEN</div>
+                
+                <!-- Seats -->
+                <div style="width: 100%; display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;">
+                    <!-- Row 1 -->
+                    <div class="seat vip">A1</div>
+                    <div class="seat vip">A2</div>
+                    <div class="seat vip">A3</div>
+                    <div class="seat vip">A4</div>
+                    <div class="seat vip">A5</div>
+                    <div class="seat vip">A6</div>
+                    <div class="seat vip">A7</div>
+                    <div class="seat vip">A8</div>
+                    
+                    <!-- Row 2 -->
+                    <div class="seat">B1</div>
+                    <div class="seat">B2</div>
+                    <div class="seat">B3</div>
+                    <div class="seat">B4</div>
+                    <div class="seat">B5</div>
+                    <div class="seat">B6</div>
+                    <div class="seat">B7</div>
+                    <div class="seat">B8</div>
+                    
+                    <!-- Row 3 -->
+                    <div class="seat">C1</div>
+                    <div class="seat">C2</div>
+                    <div class="seat">C3</div>
+                    <div class="seat">C4</div>
+                    <div class="seat">C5</div>
+                    <div class="seat">C6</div>
+                    <div class="seat">C7</div>
+                    <div class="seat">C8</div>
+                    
+                    <!-- Row 4 -->
+                    <div class="seat">D1</div>
+                    <div class="seat">D2</div>
+                    <div class="seat">D3</div>
+                    <div class="seat">D4</div>
+                    <div class="seat">D5</div>
+                    <div class="seat">D6</div>
+                    <div class="seat">D7</div>
+                    <div class="seat">D8</div>
+                </div>
+            </div>
+            <div class="theater-controls fade-in">
+                <button class="btn">Book Now</button>
+                <button class="btn btn-outline">View Showtimes</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3D Experience Section -->
+    <section class="experience-3d">
+        <div class="experience-container">
+            <div class="section-title fade-in">
+                <h2>3D Virtual Reality</h2>
+            </div>
+            <div class="vr-headset fade-in">
+                <div class="vr-screen">
+                    <p>Virtual Reality Experience</p>
+                </div>
+                <div class="vr-strap left"></div>
+                <div class="vr-strap right"></div>
+            </div>
+            <div style="text-align: center; margin-top: 50px;" class="fade-in">
+                <p style="max-width: 800px; margin: 0 auto; color: rgba(255, 255, 255, 0.8);">
+                    Immerse yourself in our cutting-edge 3D virtual reality experiences. With state-of-the-art VR headsets and 360-degree content, you'll feel like you're really there.
+                </p>
+                <a href="#" class="btn" style="margin-top: 30px;">Explore VR Content</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Space Experience Section -->
+    <section class="space-section">
+        <div class="space-container">
+            <div class="section-title fade-in">
+                <h2>Space Exploration</h2>
+            </div>
+            <div class="fade-in" style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <p style="margin-bottom: 30px; color: rgba(255, 255, 255, 0.8);">
+                    Journey through the cosmos with our stunning space imagery and videos. From the surface of Mars to distant galaxies, experience the wonders of the universe.
+                </p>
+                <a href="#" class="btn">Launch Experience</a>
+            </div>
+            <div class="planet"></div>
+            <div class="spaceship"></div>
+        </div>
+    </section>
+
+    <!-- Underwater Experience Section -->
+    <section class="underwater-section">
+        <div class="section-title fade-in">
+            <h2>Underwater Adventure</h2>
+        </div>
+        <div class="fade-in" style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <p style="margin-bottom: 30px; color: rgba(255, 255, 255, 0.8);">
+                Dive into the depths of the ocean with our immersive underwater footage. Explore coral reefs, shipwrecks, and encounter majestic marine life.
+            </p>
+            <a href="#" class="btn">Dive In</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>About Final Frame</h3>
+                <p>Final Frame is the ultimate destination for high-quality multimedia experiences, offering cutting-edge video content, image galleries, and immersive technologies.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Video Library</a></li>
+                    <li><a href="#">Image Gallery</a></li>
+                    <li><a href="#">3D Experience</a></li>
+                    <li><a href="#">IMAX Theater</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Categories</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Nature</a></li>
+                    <li><a href="#">Wildlife</a></li>
+                    <li><a href="#">Cities</a></li>
+                    <li><a href="#">Space</a></li>
+                    <li><a href="#">Underwater</a></li>
+                    <li><a href="#">Documentaries</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Newsletter</h3>
+                <p>Subscribe to our newsletter for the latest updates and exclusive content.</p>
+                <form>
+                    <input type="email" placeholder="Your Email" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: none;">
+                    <button type="submit" class="btn" style="width: 100%;">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Final Frame. All Rights Reserved. | Designed with <i class="fas fa-heart" style="color: var(--primary);"></i> by Creative Team</p>
+        </div>
+    </footer>
+
+    <!-- Video Modal -->
+    <div class="modal">
+        <div class="modal-content">
+            <div class="close-modal">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="modal-video">
+                <!-- Video will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Mobile Menu Toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const nav = document.querySelector('nav ul');
+        
+        menuToggle.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            menuToggle.querySelector('i').classList.toggle('fa-times');
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('nav ul li a').forEach(link => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('active');
+                menuToggle.querySelector('i').classList.remove('fa-times');
+            });
+        });
+        
+        // Initialize Splide.js slider
+        document.addEventListener('DOMContentLoaded', function() {
+            new Splide('.festival-slider', {
+                type: 'loop',
+                perPage: 3,
+                perMove: 1,
+                gap: '30px',
+                autoplay: true,
+                interval: 3000,
+                pauseOnHover: true,
+                breakpoints: {
+                    1200: {
+                        perPage: 2,
+                    },
+                    768: {
+                        perPage: 1,
+                    }
+                }
+            }).mount();
+        });
+        
+        // Initialize particles.js
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 2,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+        
+        // Theater seat selection
+        document.querySelectorAll('.seat').forEach(seat => {
+            seat.addEventListener('click', () => {
+                if (!seat.classList.contains('vip')) {
+                    seat.classList.toggle('selected');
+                }
+            });
+        });
+        
+        // Random lightning effect
+        function lightningEffect() {
+            const lightning = document.querySelector('.lightning');
+            lightning.style.opacity = '1';
+            lightning.style.animation = 'none';
+            void lightning.offsetWidth; // Trigger reflow
+            lightning.style.animation = 'flash 0.5s linear';
+            
+            setTimeout(() => {
+                lightning.style.opacity = '0';
+            }, 500);
+            
+            // Random interval for next lightning
+            setTimeout(lightningEffect, Math.random() * 15000 + 5000);
+        }
+        
+        // Start lightning effect after initial delay
+        setTimeout(lightningEffect, 3000);
+        
+        // Create bubbles for underwater section
+        function createBubbles() {
+            const underwaterSection = document.querySelector('.underwater-section');
+            const bubbleCount = 20;
+            
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                // Random size
+                const size = Math.random() * 30 + 10;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                
+                // Random position
+                bubble.style.left = `${Math.random() * 100}%`;
+                
+                // Random animation duration
+                const duration = Math.random() * 15 + 10;
+                bubble.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                bubble.style.animationDelay = `${Math.random() * 10}s`;
+                
+                underwaterSection.appendChild(bubble);
+            }
+        }
+        
+        // Create fish for underwater section
+        function createFish() {
+            const underwaterSection = document.querySelector('.underwater-section');
+            const fishCount = 5;
+            
+            for (let i = 0; i < fishCount; i++) {
+                const fish = document.createElement('div');
+                fish.classList.add('fish');
+                
+                // Random position
+                fish.style.top = `${Math.random() * 80 + 10}%`;
+                
+                // Random animation duration
+                const duration = Math.random() * 30 + 20;
+                fish.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                fish.style.animationDelay = `${Math.random() * 10}s`;
+                
+                underwaterSection.appendChild(fish);
+            }
+        }
+        
+        // Initialize underwater elements
+        createBubbles();
+        createFish();
+        
+        // Scroll animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInOnScroll = () => {
+                fadeElements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (elementTop < windowHeight - 100) {
+                        element.classList.add('active');
+                    }
+                });
+            };
+            
+            // Initial check
+            fadeInOnScroll();
+            
+            // Check on scroll
+            window.addEventListener('scroll', fadeInOnScroll);
+        });
+        
+        // GSAP animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Animate hero content
+        gsap.from('.hero-content', {
+            duration: 1,
+            y: 50,
+            opacity: 0,
+            ease: 'power3.out'
+        });
+        
+        // Animate hero image
+        gsap.from('.hero-image', {
+            duration: 1,
+            x: 50,
+            opacity: 0,
+            delay: 0.3,
+            ease: 'power3.out'
+        });
+        
+        // Parallax effects
+        gsap.to('.hero-image', {
+            y: 50,
+            scrollTrigger: {
+                trigger: '.hero',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: true
+            }
+        });
+        
+        // 3D VR headset animation
+        gsap.to('.vr-screen', {
+            rotationY: 0,
+            scrollTrigger: {
+                trigger: '.experience-3d',
+                start: 'top 70%',
+                toggleActions: 'play none none none'
+            },
+            duration: 1,
+            ease: 'back.out(1.7)'
+        });
+        
+        // Theater screen animation
+        gsap.from('.theater-screen', {
+            scrollTrigger: {
+                trigger: '.theater-section',
+                start: 'top 70%',
+                toggleActions: 'play none none none'
+            },
+            duration: 1,
+            scale: 0.8,
+            opacity: 0,
+            ease: 'power2.out'
+        });
+        
+        // Video card animations
+        gsap.utils.toArray('.video-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 80%',
+                    toggleActions: 'play none none none'
+                },
+                duration: 0.5,
+                y: 50,
+                opacity: 0,
+                delay: i * 0.1,
+                ease: 'power2.out'
+            });
+        });
+        
+        // Modal functionality
+        const modal = document.querySelector('.modal');
+        const closeModal = document.querySelector('.close-modal');
+        const videoCards = document.querySelectorAll('.video-card');
+        
+        videoCards.forEach(card => {
+            card.addEventListener('click', () => {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        closeModal.addEventListener('click', () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Close modal when clicking outside content
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
+</body>
+</html>
